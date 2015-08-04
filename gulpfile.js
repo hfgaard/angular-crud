@@ -26,7 +26,7 @@ gulp.task('test', function() {
 });
 
 gulp.task('jshint', function() {
-  return gulp.src(['*.js', 'test/*test.js', 'routes/*routes.js', 'models/*model.js'])
+  return gulp.src(['*.js', 'test/*test.js', 'routes/*routes.js', 'models/*model.js', 'app/**/*.js'])
     .pipe(jshint())
     .pipe(jshint.reporter('jshint-stylish'));
 });
@@ -34,5 +34,5 @@ gulp.task('jshint', function() {
 gulp.task('build', ['webpack:dev', 'copy']);
 
 gulp.task('watch', function() {
-  gulp.watch(['*.js', 'test/*test.js', 'routes/*routes.js', 'models/*model.js']);
+  gulp.watch(['*.js', 'test/*test.js', 'routes/*routes.js', 'models/*model.js', 'app/**/*.js']);
 });
