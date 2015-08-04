@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+</head>
+<body data-ng-app="userApp">
+  <main data-ng-controller="userController">
+    <h1>Submit a User</h1>
+    <p>Use the form below to submit a username, email and password to be stored to the database.</p>
+    <form>
+      <input type="text" data-ng-model="username">
+      <input type="text" data-ng-model="email">
+      <input type="text" data-ng-model="password">
+      <button data-ng-click="submitUser()">Submit</button>
+    </form>
+    <p>Username: {{username}}</p>
+    <p>Email: {{email}}</p>
+    <p>Password: {{password}}</p>
+  </main>
+
+  <script src="bundle.js"></script>
+</body>
+</html>

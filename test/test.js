@@ -14,7 +14,7 @@ chai.use(chaiHttp);
 describe('server.js', function() {
   it('should create a new user', function(done) {
     chai.request('localhost:3000')
-        .post('/api/user')
+        .post('/api/users')
         .send({userName: 'test', email: 'a@a.com', password: 'password'})
         .end(function(err, res) {
           expect(err).to.be.null;
@@ -47,7 +47,7 @@ describe('server.js', function() {
 
     it('should be able to update', function(done) {
       chai.request('localhost:3000')
-          .put('/api/user/' + userTest._id)
+          .put('/api/users/' + userTest._id)
           .send({userName: 'tester', email: 'b@b.com', password: 'newpassword'})
           .end(function(err, res) {
             expect(err).to.be.null;
@@ -58,7 +58,7 @@ describe('server.js', function() {
 
     it('should be able to delete a user', function(done) {
       chai.request('localhost:3000')
-          .del('/api/user/' + userTest._id)
+          .del('/api/users/' + userTest._id)
           .end(function(err, res) {
             expect(err).to.be.null;
             expect(res.body.msg).to.eql('User has been removed');

@@ -5,11 +5,11 @@ var webpack = require('gulp-webpack');
 
 gulp.task('default', ['test', 'jshint', 'watch', 'build']);
 
-gulp.task('webpack', function() {
+gulp.task('webpack:dev', function() {
   return gulp.src('app/js/client.js')
     .pipe(webpack({
       output: {
-        filename: 'bundle.js';
+        filename: 'bundle.js'
       }
     }))
     .pipe(gulp.dest('build/'));
@@ -31,7 +31,7 @@ gulp.task('jshint', function() {
     .pipe(jshint.reporter('jshint-stylish'));
 });
 
-gulp.task('build', ['webpack', 'copy']);
+gulp.task('build', ['webpack:dev', 'copy']);
 
 gulp.task('watch', function() {
   gulp.watch(['*.js', 'test/*test.js', 'routes/*routes.js', 'models/*model.js']);

@@ -15,7 +15,7 @@ module.exports = function(router) {
     });
   });
 
-  router.get('/user/:id', function(req, res) {
+  router.get('/users/:id', function(req, res) {
     User.find({'_id': req.params.id}, function(err, data) {
       if (err) {
         return res.status(404).json({msg: 'Error'});
@@ -24,7 +24,7 @@ module.exports = function(router) {
     });
   });
 
-  router.post('/user', function(req, res) {
+  router.post('/users', function(req, res) {
     var user = new User(req.body);
     user.save(function(err) {
       if (err) {
@@ -34,7 +34,7 @@ module.exports = function(router) {
     });
   });
 
-  router.put('/user/:id', function(req, res) {
+  router.put('/users/:id', function(req, res) {
     User.update({'_id': req.params.id}, req.body, function(err, data) {
       if (err) {
         return res.status(404).json({msg: 'Error'});
@@ -43,7 +43,7 @@ module.exports = function(router) {
     });
   });
 
-  router.delete('/user/:id', function(req, res) {
+  router.delete('/users/:id', function(req, res) {
     User.remove({'_id': req.params.id}, function(err, data) {
       if (err) {
         return res.status(404).json({msg: 'Error'});
