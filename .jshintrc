@@ -1,0 +1,8 @@
+{
+  "expr"    : true,
+  "node"    : true,
+  "mocha"   : true,
+  "globals" : {
+    "angular" : true
+  }
+}

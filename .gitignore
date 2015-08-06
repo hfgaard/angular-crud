@@ -1,2 +1,5 @@
+build
+db/
 node_modules
-db
+**/*.log
+**/*.sw?
