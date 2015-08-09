@@ -24,7 +24,6 @@ module.exports = function(app) {
           console.log(res.data);
           $scope.errors.push(res.data);
         });
-      $scope.getAll();
     };
 
     $scope.destroy = function(user) {
