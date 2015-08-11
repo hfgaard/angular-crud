@@ -1,50 +1,38 @@
 'use strict';
 
 module.exports = function(app) {
-  app.controller('usersController', ['$scope', '$http', function($scope, $http) {
+  app.controller('usersController', ['$scope', 'RESTResource', function($scope, resource) {
     $scope.users = [];
     $scope.errors = [];
+    var User = new resource('users');
 
     $scope.getAll = function() {
-      $http.get('/api/users')
-        .then(function(res) {
-          $scope.users = res.data;
-        }, function(res) {
-          console.log(res.data);
-          $scope.errors.push(res.data);
-        });
+      User.get(function(err, data) {
+        if (err) return $scope.errors.push({msg: 'error getting users'});
+        $scope.users = data;
+      });
     };
 
     $scope.create = function(user) {
       $scope.newUser = null;
-      $http.post('/api/users', user)
-        .then(function(res) {
-          $scope.users.push(res.data);
-        }, function(res) {
-          console.log(res.data);
-          $scope.errors.push(res.data);
-        });
+      User.save(user, function(err, data) {
+        if (err) return $scope.errors.push({msg: 'error saving user: ' + user.username});
+        $scope.users.push(data);
+      });
     };
 
     $scope.destroy = function(user) {
-      $http.delete('/api/users/' + user._id)
-        .then(function(res) {
-          $scope.users.splice($scope.users.indexOf(user), 1);
-        }, function(res) {
-          console.log(res.data);
-          $scope.errors.push(res.data);
-        });
+      User.destroy(user, function(err, data) {
+        if (err) return $scope.errors.push({msg: 'error deleting user: ' + user.username});
+        $scope.users.splice($scope.users.indexOf(user), 1);
+      });
     };
 
     $scope.update = function(user) {
-      user.editing = false;
-      $http.put('/api/users/' + user._id, user)
-        .then(function(res) {
-
-        }, function(res) {
-          console.log(res.data);
-          $scope.errors.push(res.data);
-        });
+      User.update(user, function(err, data) {
+        if (err) return $scope.errors.push({msg: 'error updating user: ' + user.username});
+        user.editing = false;
+      });
     };
 
     $scope.toggleEdit = function(user) {
@@ -62,6 +50,6 @@ module.exports = function(app) {
         user.passwordBackup = user.password;
         user.editing = true;
       }
-    }
+    };
   }]);
 };

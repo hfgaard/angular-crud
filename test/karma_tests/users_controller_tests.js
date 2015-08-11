@@ -44,7 +44,7 @@ describe('users controller', function() {
     });
 
     it('should make a post request when create is called', function() {
-      var testUser = {username: 'test2', email: 'b@b.com', password: '123', _id: 2};
+      var testUser = {username: 'test2', email: 'b@b.com', password: '123'};
       $scope.newUser = testUser;
       expect($scope.users.length).toBe(0);
       $httpBackend.expectPOST('/api/users').respond(200, {username: 'test', email: 'a@a.com', password: '123', _id: 1});
