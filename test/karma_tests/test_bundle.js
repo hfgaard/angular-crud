@@ -54,7 +54,7 @@
 	'use strict';
 
 	__webpack_require__(2);
-	__webpack_require__(6);
+	__webpack_require__(8);
 
 	describe('users controller', function() {
 	  var $ControllerConstructor;
@@ -97,7 +97,7 @@
 	    });
 
 	    it('should make a post request when create is called', function() {
-	      var testUser = {username: 'test2', email: 'b@b.com', password: '123', _id: 2};
+	      var testUser = {username: 'test2', email: 'b@b.com', password: '123'};
 	      $scope.newUser = testUser;
 	      expect($scope.users.length).toBe(0);
 	      $httpBackend.expectPOST('/api/users').respond(200, {username: 'test', email: 'a@a.com', password: '123', _id: 1});
@@ -139,10 +139,11 @@
 	'use strict';
 
 	__webpack_require__(3);
+	__webpack_require__(4);
 
-	var userApp = angular.module('userApp', []);
+	var userApp = angular.module('userApp', ['services']);
 
-	__webpack_require__(4)(userApp);
+	__webpack_require__(6)(userApp);
 
 
 /***/ },
@@ -28520,9 +28521,9 @@
 
 	'use strict';
 
-	module.exports = function(app) {
-	  __webpack_require__(5)(app);
-	};
+	var services = module.exports = exports = angular.module('services', []);
+
+	__webpack_require__(5)(services);
 
 
 /***/ },
@@ -28532,50 +28533,104 @@
 	'use strict';
 
 	module.exports = function(app) {
-	  app.controller('usersController', ['$scope', '$http', function($scope, $http) {
+	  app.factory('RESTResource', ['$http', function($http) {
+	    var handleError = function(callback, data) {
+	      return function(res) {
+	        console.log(res.data);
+	        callback(res.data);
+	      };
+	    };
+
+	    var handleSuccess = function(callback, data) {
+	      return function(res) {
+	        callback(null, res.data);
+	      };
+	    };
+
+	    return function(resourceName) {
+	      var handleRequest = function(method, data, callback) {
+	        var url = '/api/' + resourceName;
+	        if (data && data._id) url += '/' + data._id;
+	        $http({
+	          method: method,
+	          url: url,
+	          data: data
+	        })
+	          .then(handleSuccess(callback), handleError(callback));
+	      };
+
+	      return {
+	        get: function(callback) {
+	          handleRequest('GET', null, callback);
+	        },
+
+	        save: function(data, callback) {
+	          handleRequest('POST', data, callback);
+	        },
+
+	        update: function(data, callback) {
+	          handleRequest('PUT', data, callback);
+	        },
+
+	        destroy: function(data, callback) {
+	          handleRequest('DELETE', data, callback);
+	        }
+	      };
+	    };
+	  }]);
+	};
+
+
+/***/ },
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	module.exports = function(app) {
+	  __webpack_require__(7)(app);
+	};
+
+
+/***/ },
+/* 7 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	module.exports = function(app) {
+	  app.controller('usersController', ['$scope', 'RESTResource', function($scope, resource) {
 	    $scope.users = [];
 	    $scope.errors = [];
+	    var User = new resource('users');
 
 	    $scope.getAll = function() {
-	      $http.get('/api/users')
-	        .then(function(res) {
-	          $scope.users = res.data;
-	        }, function(res) {
-	          console.log(res.data);
-	          $scope.errors.push(res.data);
-	        });
+	      User.get(function(err, data) {
+	        if (err) return $scope.errors.push({msg: 'error getting users'});
+	        $scope.users = data;
+	      });
 	    };
 
 	    $scope.create = function(user) {
 	      $scope.newUser = null;
-	      $http.post('/api/users', user)
-	        .then(function(res) {
-	          $scope.users.push(res.data);
-	        }, function(res) {
-	          console.log(res.data);
-	          $scope.errors.push(res.data);
-	        });
+	      User.save(user, function(err, data) {
+	        if (err) return $scope.errors.push({msg: 'error saving user: ' + user.username});
+	        $scope.users.push(data);
+	      });
 	    };
 
 	    $scope.destroy = function(user) {
-	      $http.delete('/api/users/' + user._id)
-	        .then(function(res) {
-	          $scope.users.splice($scope.users.indexOf(user), 1);
-	        }, function(res) {
-	          console.log(res.data);
-	          $scope.errors.push(res.data);
-	        });
+	      User.destroy(user, function(err, data) {
+	        if (err) return $scope.errors.push({msg: 'error deleting user: ' + user.username});
+	        $scope.users.splice($scope.users.indexOf(user), 1);
+	      });
 	    };
 
 	    $scope.update = function(user) {
-	      user.editing = false;
-	      $http.put('/api/users/' + user._id, user)
-	        .then(function(res) {
-
-	        }, function(res) {
-	          console.log(res.data);
-	          $scope.errors.push(res.data);
-	        });
+	      User.update(user, function(err, data) {
+	        if (err) return $scope.errors.push({msg: 'error updating user: ' + user.username});
+	        user.editing = false;
+	      });
 	    };
 
 	    $scope.toggleEdit = function(user) {
@@ -28593,13 +28648,13 @@
 	        user.passwordBackup = user.password;
 	        user.editing = true;
 	      }
-	    }
+	    };
 	  }]);
 	};
 
 
 /***/ },
-/* 6 */
+/* 8 */
 /***/ function(module, exports) {
 
 	/**
