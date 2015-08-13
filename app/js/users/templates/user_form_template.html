@@ -1,0 +1,9 @@
+<form name="userForm" data-ng-submit="save({user: user})">
+  <label for="username">{{labelText}}</label>
+  <input type="text" required name="username" data-ng-model="user.username">
+  <label for="email">Email:</label>
+  <input type="text" required name="email" data-ng-model="user.email">
+  <label for="password">Password:</label>
+  <input type="text" required name="password" data-ng-model="user.password">
+  <button type="submit">{{buttonText}}</button>
+</form>
