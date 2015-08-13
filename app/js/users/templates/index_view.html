@@ -1,0 +1,25 @@
+<section data-ng-controller="usersController" data-ng-init="getAll()">
+  <h1>Submit a User</h1>
+  <p>Use the form below to submit a username, email and password to be stored to the database.</p>
+  <div data-user-form-directive
+    data-save="create(user)"
+    data-label-text="'New User:'"
+    data-button-text="'Create New User'"
+    data-user="newUser">
+  </div>
+  <ul data-ng-repeat="user in users">
+    <li data-ng-if="!user.editing">Username: {{user.username}}</li>
+    <li data-ng-if="!user.editing">Email: {{user.email}}</li>
+    <li data-ng-if="!user.editing">Password: {{user.password}}</li>
+    <div data-user-form-directive
+      data-ng-if="user.editing"
+      data-save="update(user)"
+      data-label-text="'Edit User:'"
+      data-button-text="'Update User'"
+      data-user="editUser">
+    </div>
+    <button data-ng-if="user.editing" data-ng-click="toggleEdit(user)">Cancel</button>
+    <button data-ng-if="!user.editing" data-ng-click="toggleEdit(user)">Edit</button>
+    <button data-ng-click="destroy(user)">Delete</button>
+  </ul>
+</section>
